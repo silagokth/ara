@@ -15,7 +15,7 @@
 // limitations under the License.
 
 // Author: Matteo Perotti <mperotti@iis.ee.ethz.ch>
-
+#define INTRINSICS
 #include "dotproduct.h"
 
 int64_t dotp_v64b(int64_t *a, int64_t *b, uint64_t avl) {
@@ -200,7 +200,7 @@ int16_t dotp_v16b(int16_t *a, int16_t *b, uint64_t avl) {
   return vmv_x_s_i16m1_i16(red);
 
 #else
-
+  // asm volatile("csrwi 0xBEE, 0x0" ::: "memory"); // START MARKER
   size_t orig_avl = avl;
   size_t vl;
   asm volatile("vsetvli %0, %1, e16, m8, ta, ma" : "=r"(vl) : "r"(avl));
@@ -232,6 +232,7 @@ int16_t dotp_v16b(int16_t *a, int16_t *b, uint64_t avl) {
   // Reduce and return
   asm volatile("vredsum.vs v0, v24, v0");
   asm volatile("vmv.x.s %0, v0" : "=r"(red));
+  // asm volatile("csrwi 0xBEE, 0x1" ::: "memory"); // STOP MARKER
   return red;
 
 #endif

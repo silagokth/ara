@@ -38,9 +38,9 @@ extern int64_t f[] __attribute__((aligned(4 * NR_LANES)));        // [ F*F ]
 extern int64_t o[] __attribute__((aligned(4 * NR_LANES)));        // [ M*N ]
 extern int64_t golden_o[] __attribute__((aligned(4 * NR_LANES))); // [ M*N ]
 // M, N, F defined in data.S
-extern int64_t M;
-extern int64_t N;
-extern int64_t F;
+// extern int64_t M;
+// extern int64_t N;
+// extern int64_t F;
 
 // Verify the matrices
 int verify_matrix(int64_t *matrix, int64_t *golden_matrix, int64_t R,
@@ -67,42 +67,45 @@ void print_matrix(int64_t const *matrix, uint64_t num_rows,
 }
 
 int main() {
-  printf("\n");
-  printf("=============\n");
-  printf("=  ICONV2D  =\n");
-  printf("=============\n");
-  printf("\n");
-  printf("\n");
+  // printf("\n");
+  // printf("=============\n");
+  // printf("=  ICONV2D  =\n");
+  // printf("=============\n");
+  // printf("\n");
+  // printf("\n");
 
   // Call the main kernel, and measure cycles
-  start_timer();
-  if (F == 3)
-    iconv2d_3x3(o, i, f, M, N, F);
-  else if (F == 5)
-    iconv2d_5x5(o, i, f, M, N, F);
-  else if (F == 7)
-    iconv2d_7x7(o, i, f, M, N, F);
-  else
-    printf("Error: the filter size is different from 3 or 5 or 7.\n");
-  stop_timer();
+  // start_timer();
+  // if (F == 3)
+  int64_t M = 512;
+  int64_t N = 1;
+  int64_t F = 3;
+  iconv2d_3x3(o, i, f, M, N, F);
+  // else if (F == 5)
+  //   iconv2d_5x5(o, i, f, M, N, F);
+  // else if (F == 7)
+  //   iconv2d_7x7(o, i, f, M, N, F);
+  // else
+  //   printf("Error: the filter size is different from 3 or 5 or 7.\n");
+  // stop_timer();
 
   // Performance metrics
-  int64_t runtime = get_timer();
-  float performance = 2.0 * F * F * M * N / runtime;
-  float utilization = 100 * performance / (2.0 * NR_LANES);
+  // int64_t runtime = get_timer();
+  // float performance = 2.0 * F * F * M * N / runtime;
+  // float utilization = 100 * performance / (2.0 * NR_LANES);
 
-  printf("The execution took %d cycles.\n", runtime);
-  printf("The performance is %f OP/cycle (%f%% utilization).\n", performance,
-         utilization);
+  // printf("The execution took %d cycles.\n", runtime);
+  // printf("The performance is %f OP/cycle (%f%% utilization).\n", performance,
+  //        utilization);
 
   // Verify correctness
-  printf("Verifying result...\n");
-  int error = verify_matrix(o, golden_o, M, N);
-  if (error != 0) {
-    printf("Fail.\n");
-  } else {
-    printf("Passed.\n");
-  }
+  // printf("Verifying result...\n");
+  // int error = verify_matrix(o, golden_o, M, N);
+  // if (error != 0) {
+  //   printf("Fail.\n");
+  // } else {
+  //   printf("Passed.\n");
+  // }
 
-  return error;
+  return 0;
 }

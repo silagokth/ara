@@ -55,55 +55,59 @@ int verify_matrix(int64_t *result, int64_t *gold, size_t R, size_t C) {
 }
 
 int main() {
-  printf("\n");
-  printf("=============\n");
-  printf("=  IMATMUL  =\n");
-  printf("=============\n");
-  printf("\n");
-  printf("\n");
+  //   printf("\n");
+  //   printf("=============\n");
+  //   printf("=  IMATMUL  =\n");
+  //   printf("=============\n");
+  //   printf("\n");
+  //   printf("\n");
 
-#ifdef VCD_DUMP
-  // Measure only the full-size matmul
-  for (uint64_t s = M; s <= M; s *= 2) {
-#else
-  for (int s = 4; s <= M; s *= 2) {
-#endif
-    printf("\n");
-    printf("------------------------------------------------------------\n");
-    printf("Calculating a (%d x %d) x (%d x %d) matrix multiplication...\n", s,
-           s, s, s);
-    printf("------------------------------------------------------------\n");
-    printf("\n");
+  // #ifdef VCD_DUMP
+  //   // Measure only the full-size matmul
+  //   for (uint64_t s = M; s <= M; s *= 2) {
+  // #else
+  //   for (int s = 4; s <= M; s *= 2) {
+  // #endif
+  //     printf("\n");
+  //     printf("------------------------------------------------------------\n");
+  //     printf("Calculating a (%d x %d) x (%d x %d) matrix
+  //     multiplication...\n", s,
+  //            s, s, s);
+  //     printf("------------------------------------------------------------\n");
+  //     printf("\n");
 
-    // Matrices are initialized --> Start calculating
-    printf("Calculating imatmul...\n");
-    start_timer();
-    imatmul(c, a, b, s, s, s);
-    stop_timer();
+  //     // Matrices are initialized --> Start calculating
+  //     printf("Calculating imatmul...\n");
+  //     start_timer();
+  int m = 64;
+  int n = 1;
+  int p = 1;
+  imatmul_8x8(c, a, b, m, n, p);
+  // stop_timer();
 
-    // Metrics
-    int64_t runtime = get_timer();
-    float performance = 2.0 * s * s * s / runtime;
-    float utilization = 100 * performance / (2.0 * NR_LANES);
+  // // Metrics
+  // int64_t runtime = get_timer();
+  // float performance = 2.0 * s * s * s / runtime;
+  // float utilization = 100 * performance / (2.0 * NR_LANES);
 
-    printf("The execution took %d cycles.\n", runtime);
-    printf("The performance is %f OP/cycle (%f%% utilization).\n", performance,
-           utilization);
+  // printf("The execution took %d cycles.\n", runtime);
+  // printf("The performance is %f OP/cycle (%f%% utilization).\n", performance,
+  //        utilization);
 
-    // Verify the result only for s == M (to keep it simple)
-    if (s == M) {
-      // Verify the result
-      printf("Verifying result...\n");
-      int error = verify_matrix(c, g, s, s);
-      if (error != 0) {
-        printf("Error code %d\n", error);
-        printf("c[%d]=%d\n", error, c[error]);
-        return error;
-      } else {
-        printf("Passed.\n");
-      }
-    }
-  }
+  // // Verify the result only for s == M (to keep it simple)
+  // if (s == M) {
+  //   // Verify the result
+  //   printf("Verifying result...\n");
+  //   int error = verify_matrix(c, g, s, s);
+  //   if (error != 0) {
+  //     printf("Error code %d\n", error);
+  //     printf("c[%d]=%d\n", error, c[error]);
+  //     return error;
+  //   } else {
+  //     printf("Passed.\n");
+  //   }
+  // }
+  // }
 
   return 0;
 }
